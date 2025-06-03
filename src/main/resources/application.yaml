@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: demo-spring-ai
+  ai:
+    vectorstore:
+      chroma:
+        client:
+          host: http://localhost
+          port: 8000
+        collection-name: DemoSpringAiCollection
+        initialize-schema: true
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+  vector-db:
+    vector-store-path:
+    documents-to-load: -classpath:/imdb_top1000.csv
+
+logging:
+  level:
+    org.springframework.ai: debug
+    org.springframework.ai.vectorstore.chroma: debug
