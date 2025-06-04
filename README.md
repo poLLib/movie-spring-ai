@@ -1,8 +1,7 @@
 ## Demo SpringAI
 
-
-## Run chroma vector store
+## Run docker compose
 
 ```shell
-docker run -p 8000:8000 chromadb/chroma
+docker compose up
 ```

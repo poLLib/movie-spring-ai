@@ -3,20 +3,35 @@ spring:
     name: demo-spring-ai
   ai:
     vectorstore:
-      chroma:
+      milvus:
         client:
-          host: http://localhost
-          port: 8000
-        collection-name: DemoSpringAiCollection
+          host: "localhost"
+          port: 19530
+          username: "milvus"
+          password: "milvus"
+        collectionName: "vector_store_spring_ai"
+        embeddingDimension: 1536
+        indexType: IVF_FLAT
+        metricType: COSINE
         initialize-schema: true
     openai:
       api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small
+      chat:
+        options:
+          model: gpt-4.1
+          temperature: 0.7
+          max-tokens: 2048
 
   vector-db:
-    vector-store-path:
-    documents-to-load: -classpath:/imdb_top1000.csv
+    vector-store-path: vector-store.json
+    documents-to-load: classpath:/imdb_top1000.csv
 
 logging:
   level:
     org.springframework.ai: debug
     org.springframework.ai.vectorstore.chroma: debug
+    ai.spring.demospringai: debug
+    root: info

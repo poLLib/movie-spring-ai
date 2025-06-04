@@ -1,0 +1,11 @@
+### Ask for movie
+POST http://localhost:8080/ask-for-movie
+Content-Type: application/json
+Accept: application/json
+
+{
+  "movieQuestion": "Find me best rating movie"
+}
+
+### Test Vector Store connection
+GET http://localhost:9091/api/v1/collections
