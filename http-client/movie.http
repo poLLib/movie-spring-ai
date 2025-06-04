@@ -1,10 +1,10 @@
-### Ask for movie
-POST http://localhost:8080/ask-for-movie
+### Ask for movies
+POST http://localhost:8080/ask-for-movies
 Content-Type: application/json
 Accept: application/json
 
 {
-  "movieQuestion": "Find me best rating movie"
+  "movieQuestion": "Find me all movies from Francis Ford Coppola"
 }
 
 ### Test Vector Store connection
