@@ -1,10 +1,10 @@
-package ai.spring.demospringai
+package ai.spring.moviespringai
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class DemoSpringAiApplicationTests {
+class MovieSpringAiApplicationTests {
 
     @Test
     fun contextLoads() {

@@ -1,7 +1,7 @@
-package ai.spring.demospringai.service
+package ai.spring.moviespringai.service
 
-import ai.spring.demospringai.service.model.AskForMoviesRequest
-import ai.spring.demospringai.service.model.AskForMoviesResponse
+import ai.spring.moviespringai.service.model.AskForMoviesRequest
+import ai.spring.moviespringai.service.model.AskForMoviesResponse
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
@@ -39,14 +39,14 @@ class AskForMoviesService(
     fun ask(
             request : AskForMoviesRequest,
     ) : List<AskForMoviesResponse>? {
-        val converter = BeanOutputConverter(AskForMoviesResponse::class.java)
+        val converter = BeanOutputConverter(object : ParameterizedTypeReference<List<AskForMoviesResponse>>() {})
         val format = converter.format
+
         val documents = vectorStore.similaritySearch(
                 SearchRequest
                         .builder()
                         .query(request.movieQuestion)
-                        .topK(getTopK(request))
-                        .similarityThreshold(0.6)
+                        .topK(15)
                         .build()
         )
 
@@ -55,18 +55,17 @@ class AskForMoviesService(
                 .map(Document::getFormattedContent)
                 .toList()
 
-        logger.info { "=== DOCUMENTS FOUND ===" }
-        logger.info { "Query: ${request.movieQuestion}" }
-        logger.info { "Documents count: ${documents.size}" }
-        contentList.forEach { content ->
-            logger.info { "Document content: ${content.take(500)}" }
-        }
+        logDocuments(
+                request = request,
+                documents = documents,
+                contentList = contentList
+        )
 
         val systemMessage = SystemPromptTemplate(systemPromptTemplate).createMessage()
         val userMessage = PromptTemplate(ragPromptTemplate).createMessage(
                 mapOf(
                         "movieQuestion" to request.movieQuestion,
-                        "documents" to contentList.joinToString { "\n" },
+                        "documents" to contentList.joinToString(separator = "\n"),
                         "format" to format,
                 )
         )
@@ -76,36 +75,31 @@ class AskForMoviesService(
                         userMessage,
                 )
         )
+
         return try {
-            chatClient
-                    .prompt(prompt)
-                    .call()
-                    .entity(object : ParameterizedTypeReference<List<AskForMoviesResponse>>() {})
-        } catch (e : Exception) {
-            listOfNotNull(
+            converter.convert(
                     chatClient
                             .prompt(prompt)
                             .call()
-                            .entity(AskForMoviesResponse::class.java)
+                            .content()!!
             )
+        } catch (e : Exception) {
+            logger.error { "Error occurred when parsing response: ${e.message}" }
+            emptyList()
         }
     }
 
-    private fun getTopK(
+    private fun logDocuments(
             request : AskForMoviesRequest,
-    ) : Int = if (listOf(
-                    "all",
-                    "movies",
-                    "films",
-                    "every"
-            ).any {
-                request.movieQuestion.contains(
-                        it,
-                        ignoreCase = true
-                )
-            }) {
-        100
-    } else {
-        10
+            documents : List<Document>,
+            contentList : List<String>?,
+    ) {
+        logger.info { "=== DOCUMENTS FOUND ===" }
+        logger.info { "Query: ${request.movieQuestion}" }
+        logger.info { "Documents count: ${documents.size}" }
+        contentList
+                ?.forEach { content ->
+                    logger.debug { "Document content: ${content.take(500)}" }
+                }
     }
 }

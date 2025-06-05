@@ -1,4 +1,4 @@
-package ai.spring.demospringai.config
+package ai.spring.moviespringai.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -15,6 +15,5 @@ class VectorStoreConfig
 
 @ConfigurationProperties(prefix = "spring.vector-db")
 data class VectorStoreProperties(
-        val vectorStorePath : String,
         val documentsToLoad : List<Resource>,
 )

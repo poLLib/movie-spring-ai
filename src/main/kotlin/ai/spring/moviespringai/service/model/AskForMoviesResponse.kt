@@ -1,4 +1,4 @@
-package ai.spring.demospringai.service.model
+package ai.spring.moviespringai.service.model
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.annotation.JsonPropertyOrder

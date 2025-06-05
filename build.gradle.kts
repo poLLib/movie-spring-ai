@@ -5,7 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "demo.ai.spring"
+group = "movie.ai.spring"
 version = "0.0.1-SNAPSHOT"
 
 java {

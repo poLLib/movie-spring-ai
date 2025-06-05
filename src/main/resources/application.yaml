@@ -1,6 +1,6 @@
 spring:
   application:
-    name: demo-spring-ai
+    name: movie-spring-ai
   ai:
     vectorstore:
       milvus:
@@ -26,12 +26,11 @@ spring:
           max-tokens: 2048
 
   vector-db:
-    vector-store-path: vector-store.json
-    documents-to-load: classpath:/imdb_top1000.csv
+    documents-to-load: classpath:/imdb_top500.csv
 
 logging:
   level:
     org.springframework.ai: debug
     org.springframework.ai.vectorstore.chroma: debug
-    ai.spring.demospringai: debug
+    ai.spring.moviespringai: debug
     root: info

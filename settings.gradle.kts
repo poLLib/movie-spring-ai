@@ -1,1 +1,1 @@
-rootProject.name = "demo-spring-ai"
+rootProject.name = "movie-spring-ai"

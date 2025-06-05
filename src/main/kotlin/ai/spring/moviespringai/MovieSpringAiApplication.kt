@@ -1,11 +1,11 @@
-package ai.spring.demospringai
+package ai.spring.moviespringai
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class DemoSpringAiApplication
+class MovieSpringAiApplication
 
 fun main(args : Array<String>) {
-    runApplication<DemoSpringAiApplication>(*args)
+    runApplication<MovieSpringAiApplication>(*args)
 }

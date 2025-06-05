@@ -1,6 +1,6 @@
-package ai.spring.demospringai.bootstrap
+package ai.spring.moviespringai.bootstrap
 
-import ai.spring.demospringai.config.VectorStoreProperties
+import ai.spring.moviespringai.config.VectorStoreProperties
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.ai.reader.tika.TikaDocumentReader

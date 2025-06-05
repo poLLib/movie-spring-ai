@@ -1,4 +1,4 @@
-package ai.spring.demospringai.service.model
+package ai.spring.moviespringai.service.model
 
 data class AskForMoviesRequest(
         val movieQuestion : String,
