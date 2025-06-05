@@ -6,3 +6,4 @@ Simple AI application to look up between top 500 movies according to IMDB.
 ```shell
 docker compose up
 ```
+## Set OPENAI_API_KEY=${API_KEY} as enviromental variable
