@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "movieQuestion": "Find me all movies by Steven Spielberg"
+  "movieQuestion": "Find me movie by Coppola and describe it properly"
 }
 
 ### Test Vector Store connection

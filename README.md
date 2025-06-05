@@ -1,9 +1,8 @@
 ## Movie SpringAI
 
-Simple AI application to look up between top 500 movies according to IMDB.
+Simple AI application to look up between top 500 movies according to IMDB and returning response in JSON.
 
-## Run docker compose before start of app
+## Run docker compose
 ```shell
 docker compose up
 ```
-## Set OPENAI_API_KEY=${API_KEY} as enviromental variable

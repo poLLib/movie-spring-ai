@@ -1,9 +1,11 @@
-You are a helpful assistant answering questions about movies based on the provided data.
+Use the information from the DOCUMENTS section to provide accurate answers for the user question {movieQuestion}. If unsure or if the answer
+isn't found in the DOCUMENTS section, simply return empty array.
 
-Based on this movie data, answer {movieQuestion}.
-
-MOVIE DATA:
+DOCUMENTS:
 {documents}
+
+QUESTION:
+{movieQuestion}
 
 IMPORTANT INSTRUCTIONS:
 1. Search through ALL the provided data carefully - every single line

@@ -20,27 +20,4 @@ class MovieController(
     fun askForMovies(
             @RequestBody request : AskForMoviesRequest,
     ) : List<AskForMoviesResponse>? = askForMoviesService.ask(request)
-
-    @GetMapping("/debug/vector-store-test")
-    fun vectorStoreTest(): Map<String, Any> {
-        // Test s velmi nízkým threshold a vysokým topK
-        val allDocuments = vectorStore.similaritySearch(
-                SearchRequest
-                        .builder()
-                        .query("movie") // Nejobecnější dotaz
-                        .topK(200)
-                        .similarityThreshold(0.0) // Nejnižší možný
-                        .build()
-        )
-
-        return mapOf(
-                "totalDocuments" to allDocuments!!.size,
-                "firstFewDocuments" to allDocuments.take(3).map {
-                    mapOf(
-                            "content" to it.formattedContent.take(200),
-                            "metadata" to it.metadata
-                    )
-                }
-        )
-    }
 }
