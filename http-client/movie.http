@@ -4,7 +4,16 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "movieQuestion": "Find me movie by Coppola and describe it properly"
+  "question": "Find me movie from Jan Hrebejk and describe it properly"
+}
+
+### Create movie
+POST http://localhost:8080/movie
+Content-Type: application/json
+Accept: application/json
+
+{
+  "question": "Save movie Samotari from director Jan Hrebejek. Genre is comedy."
 }
 
 ### Test Vector Store connection

@@ -1,11 +1,11 @@
-Use the information from the DOCUMENTS section to provide accurate answers for the user question {movieQuestion}. If unsure or if the answer
+Use the information from the DOCUMENTS section to provide accurate answers for the user question {question}. If unsure or if the answer
 isn't found in the DOCUMENTS section, simply return empty array.
 
 DOCUMENTS:
 {documents}
 
 QUESTION:
-{movieQuestion}
+{question}
 
 IMPORTANT INSTRUCTIONS:
 1. Search through ALL the provided data carefully - every single line

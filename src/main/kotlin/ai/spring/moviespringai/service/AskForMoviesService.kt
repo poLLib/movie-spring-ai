@@ -1,11 +1,10 @@
 package ai.spring.moviespringai.service
 
-import ai.spring.moviespringai.service.model.AskForMoviesRequest
 import ai.spring.moviespringai.service.model.AskForMoviesResponse
+import ai.spring.moviespringai.service.model.QuestionRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
-import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.chat.prompt.PromptTemplate
 import org.springframework.ai.chat.prompt.SystemPromptTemplate
@@ -20,82 +19,84 @@ import org.springframework.stereotype.Service
 
 @Service
 class AskForMoviesService(
-        chatModel : ChatModel,
+        private val chatClientBuilder : ChatClient.Builder,
         private val vectorStore : VectorStore,
 ) {
 
-    @Value("classpath:/templates/rag-prompt-template.st")
-    private val ragPromptTemplate : Resource? = null
+    @Value("classpath:/templates/ask-for-movie-rag-prompt-template.st")
+    private val askForMoviesRagPromptTemplate : Resource? = null
 
     @Value("classpath:/templates/system-prompt-template.st")
     private val systemPromptTemplate : Resource? = null
 
     private val logger : KLogger = KotlinLogging.logger {}
 
-    private val chatClient = ChatClient
-            .builder(chatModel)
-            .build()
+    private val chatClient = chatClientBuilder.build()
 
     fun ask(
-            request : AskForMoviesRequest,
-    ) : List<AskForMoviesResponse>? {
-        val converter = BeanOutputConverter(object : ParameterizedTypeReference<List<AskForMoviesResponse>>() {})
-        val format = converter.format
+            request : QuestionRequest,
+    ) : List<AskForMoviesResponse>? =
+            BeanOutputConverter(object : ParameterizedTypeReference<List<AskForMoviesResponse>>() {})
+                    .let { converter ->
+                        vectorStore
+                                .similaritySearch(
+                                        SearchRequest
+                                                .builder()
+                                                .query(request.question)
+                                                .topK(15)
+                                                .build()
+                                )
+                                .let { documents ->
+                                    documents!!
+                                            .stream()
+                                            .map(Document::getFormattedContent)
+                                            .toList()
+                                            .also {
+                                                logDocuments(
+                                                        request = request,
+                                                        documents = documents,
+                                                        contentList = it
+                                                )
+                                            }
 
-        val documents = vectorStore.similaritySearch(
-                SearchRequest
-                        .builder()
-                        .query(request.movieQuestion)
-                        .topK(15)
-                        .build()
-        )
+                                }
+                                .let { contentList ->
+                                    val systemMessage = SystemPromptTemplate(systemPromptTemplate).createMessage()
+                                    val userMessage = PromptTemplate(askForMoviesRagPromptTemplate).createMessage(
+                                            mapOf(
+                                                    "question" to request.question,
+                                                    "documents" to contentList.joinToString(separator = "\n"),
+                                                    "format" to converter.format,
+                                            )
+                                    )
+                                    val prompt = Prompt(
+                                            listOf(
+                                                    systemMessage,
+                                                    userMessage,
+                                            )
+                                    )
 
-        val contentList = documents!!
-                .stream()
-                .map(Document::getFormattedContent)
-                .toList()
-
-        logDocuments(
-                request = request,
-                documents = documents,
-                contentList = contentList
-        )
-
-        val systemMessage = SystemPromptTemplate(systemPromptTemplate).createMessage()
-        val userMessage = PromptTemplate(ragPromptTemplate).createMessage(
-                mapOf(
-                        "movieQuestion" to request.movieQuestion,
-                        "documents" to contentList.joinToString(separator = "\n"),
-                        "format" to format,
-                )
-        )
-        val prompt = Prompt(
-                listOf(
-                        systemMessage,
-                        userMessage,
-                )
-        )
-
-        return try {
-            converter.convert(
-                    chatClient
-                            .prompt(prompt)
-                            .call()
-                            .content()!!
-            )
-        } catch (e : Exception) {
-            logger.error { "Error occurred when parsing response: ${e.message}" }
-            emptyList()
-        }
-    }
+                                    try {
+                                        converter.convert(
+                                                chatClient
+                                                        .prompt(prompt)
+                                                        .call()
+                                                        .content()!!
+                                        )
+                                    } catch (e : Exception) {
+                                        logger.error { "Error occurred when parsing response: ${e.message}" }
+                                        emptyList()
+                                    }
+                                }
+                    }
 
     private fun logDocuments(
-            request : AskForMoviesRequest,
+            request : QuestionRequest,
             documents : List<Document>,
             contentList : List<String>?,
     ) {
         logger.info { "=== DOCUMENTS FOUND ===" }
-        logger.info { "Query: ${request.movieQuestion}" }
+        logger.info { "Query: ${request.question}" }
         logger.info { "Documents count: ${documents.size}" }
         contentList
                 ?.forEach { content ->
