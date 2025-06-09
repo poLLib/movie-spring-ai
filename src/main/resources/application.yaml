@@ -24,13 +24,13 @@ spring:
           model: gpt-4.1
           temperature: 0.7
           max-tokens: 2048
-
+  ninjas-api:
+    api-ninjas-key: ${NINJAS_API_KEY}
   vector-db:
     documents-to-load: classpath:/imdb_top500.csv
+
 
 logging:
   level:
     org.springframework.ai: debug
-    org.springframework.ai.vectorstore.chroma: debug
-    ai.spring.moviespringai: debug
     root: info

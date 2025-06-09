@@ -16,5 +16,32 @@ Accept: application/json
   "question": "Save movie Samotari from director Jan Hrebejek. Genre is comedy."
 }
 
+### Ask for celebrity
+POST http://localhost:8080/celebrity
+Content-Type: application/json
+Accept: application/json
+
+{
+  "question": "Give me some info about Bruce Willis and Brad Pitt"
+}
+
+### Add celebrity to the favorite list
+POST http://localhost:8080/celebrity
+Content-Type: application/json
+Accept: application/json
+
+{
+  "question": "Add Bruce Willis into my fav list and rate him 8.5"
+}
+
+### Get celebrity from the favorite list
+POST http://localhost:8080/celebrity
+Content-Type: application/json
+Accept: application/json
+
+{
+  "question": "Give me my fav list"
+}
+
 ### Test Vector Store connection
 GET http://localhost:9091/api/v1/collections
