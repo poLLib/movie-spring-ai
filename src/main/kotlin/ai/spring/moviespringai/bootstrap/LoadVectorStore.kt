@@ -22,7 +22,7 @@ class LoadVectorStore(
 
         try {
             vectorStore
-                    .similaritySearch("Movie") // TODO: 08.06.2025 solve the existence
+                    .similaritySearch("Movie") // TODO: solve if exists
                     ?.takeIf { it.isNotEmpty() }
                     ?.also { logger.debug { "Vector store exists, skipping loading..." } }
                     ?.run {
