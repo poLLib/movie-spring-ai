@@ -1,19 +1,19 @@
-### Ask for movies
-POST http://localhost:8080/ask-for-movies
-Content-Type: application/json
-Accept: application/json
-
-{
-  "question": "Find me movie from Jan Hrebejk and describe it properly"
-}
-
 ### Create movie
 POST http://localhost:8080/movie
 Content-Type: application/json
 Accept: application/json
 
 {
-  "question": "Save movie Samotari from director Jan Hrebejek. Genre is comedy."
+  "question": "Save movie Samotari from director Jan Hrebejek. Genre is comedy. It is about a random people living theirs lives in Prague and how their destinies are connected."
+}
+
+### Ask for movies
+POST http://localhost:8080/ask-for-movies
+Content-Type: application/json
+Accept: application/json
+
+{
+"question": "Find me movie from Jan Hrebejk and describe it properly"
 }
 
 ### Ask for celebrity

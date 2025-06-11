@@ -1,5 +1,6 @@
 package ai.spring.moviespringai.service.model
 
+import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
         "genres",
         "director",
 )
+@JsonClassDescription("Response of movie creation with its informations")
 data class CreateMovieResponse(
         @JsonPropertyDescription("The name of the movie")
         val name : String,

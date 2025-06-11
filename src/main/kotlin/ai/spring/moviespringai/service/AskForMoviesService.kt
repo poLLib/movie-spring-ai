@@ -35,7 +35,7 @@ class AskForMoviesService(
 
     fun ask(
             request : QuestionRequest,
-    ) : List<AskForMoviesResponse>? =
+    ) : List<AskForMoviesResponse> =
             BeanOutputConverter(object : ParameterizedTypeReference<List<AskForMoviesResponse>>() {})
                     .let { converter ->
                         vectorStore
@@ -46,8 +46,8 @@ class AskForMoviesService(
                                                 .topK(15)
                                                 .build()
                                 )
-                                .let { documents ->
-                                    documents!!
+                                ?.let { documents ->
+                                    documents
                                             .stream()
                                             .map(Document::getFormattedContent)
                                             .toList()
@@ -60,7 +60,7 @@ class AskForMoviesService(
                                             }
 
                                 }
-                                .let { contentList ->
+                                ?.let { contentList ->
                                     val systemMessage = SystemPromptTemplate(systemPromptTemplate).createMessage()
                                     val userMessage = PromptTemplate(askForMoviesRagPromptTemplate).createMessage(
                                             mapOf(
@@ -88,6 +88,7 @@ class AskForMoviesService(
                                         emptyList()
                                     }
                                 }
+                                ?: emptyList()
                     }
 
     private fun logDocuments(

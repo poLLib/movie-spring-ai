@@ -1,7 +1,7 @@
 package ai.spring.moviespringai.service
 
 import ai.spring.moviespringai.config.NinjasApiConfig.NinjasApiProperties
-import ai.spring.moviespringai.service.model.Answer
+import ai.spring.moviespringai.service.model.AnswerResponse
 import ai.spring.moviespringai.service.model.GetCelebrityInfoResponse
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
@@ -86,21 +86,25 @@ class CelebrityTool(
     fun addToFavoriteList(
             @ToolParam(description = "Name of the celebrity to add to favorite list")
             celebrityName : String,
-            @Nullable @ToolParam(description = "Personal rating of the celebrity")
+            @Nullable
+            @ToolParam(
+                    description = "Personal rating of the celebrity",
+                    required = false
+            )
             rating : Double? = null,
-    ) : Answer = try {
+    ) : AnswerResponse = try {
         logger.info { "Adding $celebrityName to favorite list with reason: $rating" }
         celebrityFavoriteList.add(
                 celebrityName
                         .lowercase()
                         .trim()
         )
-        Answer(
+        AnswerResponse(
                 answer = "Celebrity $celebrityName was added to your favorite list"
         )
     } catch (e : Exception) {
         logger.error(e) { "Failed to add $celebrityName to favorite list" }
-        Answer(
+        AnswerResponse(
                 answer = "Unfortunately, an error occurred while adding the celebrity into the list"
         )
     }
@@ -109,13 +113,13 @@ class CelebrityTool(
             name = "GetCelebrityFavoriteList",
             description = "Get your personal favorite list"
     )
-    fun getFavoriteList() : Answer = try {
+    fun getFavoriteList() : AnswerResponse = try {
         logger.info { "Retrieving favorite celebrity list" }
         takeIf { !celebrityFavoriteList.isEmpty() }
-                ?.let { Answer(answer = "Your favorite celebrities: ${celebrityFavoriteList.joinToString(", ")}") }
-                ?: Answer(answer = "No favorite celebrities")
+                ?.let { AnswerResponse(answer = "Your favorite celebrities: ${celebrityFavoriteList.joinToString(", ")}") }
+                ?: AnswerResponse(answer = "No favorite celebrities")
     } catch (e : Exception) {
         logger.error(e) { "Failed to retrieve favorite celebrity list" }
-        Answer(answer = "Unfortunately, an error occurred while retrieving your favorite list")
+        AnswerResponse(answer = "Unfortunately, an error occurred while retrieving your favorite list")
     }
 }

@@ -3,10 +3,12 @@ package ai.spring.moviespringai.controller
 import ai.spring.moviespringai.service.AskForCelebrityService
 import ai.spring.moviespringai.service.AskForMoviesService
 import ai.spring.moviespringai.service.CreateMovieService
-import ai.spring.moviespringai.service.model.Answer
+import ai.spring.moviespringai.service.model.AnswerResponse
 import ai.spring.moviespringai.service.model.AskForMoviesResponse
 import ai.spring.moviespringai.service.model.CreateMovieResponse
 import ai.spring.moviespringai.service.model.QuestionRequest
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -18,18 +20,30 @@ class MovieController(
         private val askForCelebrityService : AskForCelebrityService,
 ) {
 
-    @PostMapping("/ask-for-movies")
+    @PostMapping(
+            value = ["/ask-for-movies"],
+            consumes = [APPLICATION_JSON_VALUE],
+            produces = [APPLICATION_JSON_VALUE]
+    )
     fun askForMovies(
             @RequestBody request : QuestionRequest,
-    ) : List<AskForMoviesResponse>? = askForMoviesService.ask(request)
+    ) : ResponseEntity<List<AskForMoviesResponse>> = ResponseEntity.ok(askForMoviesService.ask(request))
 
-    @PostMapping("/movie")
+    @PostMapping(
+            value = ["/movie"],
+            consumes = [APPLICATION_JSON_VALUE],
+            produces = [APPLICATION_JSON_VALUE]
+    )
     fun createMovie(
             @RequestBody request : QuestionRequest,
-    ) : CreateMovieResponse? = createMovieService.create(request)
+    ) : ResponseEntity<CreateMovieResponse> = ResponseEntity.ok(createMovieService.create(request))
 
-    @PostMapping("/celebrity")
+    @PostMapping(
+            value = ["/celebrity"],
+            consumes = [APPLICATION_JSON_VALUE],
+            produces = [APPLICATION_JSON_VALUE]
+    )
     fun askForCelebrity(
             @RequestBody request : QuestionRequest,
-    ) : Answer? = askForCelebrityService.ask(request)
+    ) : ResponseEntity<AnswerResponse> = ResponseEntity.ok(askForCelebrityService.ask(request))
 }
